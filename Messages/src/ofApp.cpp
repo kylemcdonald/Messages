@@ -1,5 +1,9 @@
 #include "ofApp.h"
 
+int nextPowerOfTwo(int n) {
+  return n < 2 ? 1 : 2 * nextPowerOfTwo(n / 2);
+}
+
 string buildShader(string bytebeat) {
 return "\
 #extension GL_EXT_gpu_shader4 : enable\n\
@@ -22,7 +26,7 @@ void ofApp::setup() {
 }
 
 void ofApp::update() {
-	//keyPressed(' ');
+	keyPressed(' ');
 }
 
 void ofApp::draw() {
