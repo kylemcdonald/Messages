@@ -4,8 +4,8 @@ class OneLiner {
 private:
 	static string randomOperator() {
 		int t = 0;
-		int p[] = {1, 1, 1, 1, 7, 8, 22, 23, 51, 57};
-		string q[] = {"/", "%", "<<", "^", "+", "-", "|", "*", "&", ">>"};
+		int p[10] = {1, 1, 1, 1, 7, 8, 22, 23, 51, 57};
+		string q[10] = {"/", "%", "<<", "^", "+", "-", "|", "*", "&", ">>"};
 		int sum = 0;
 		int m = 0;
 		for(int i = 0; i < 10; i++) {
