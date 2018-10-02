@@ -6,19 +6,22 @@
 class ofApp : public ofBaseApp {
 public:
 	void setup();
+    void exit();
 	void update();
 	void draw();
 
 	void audioOut(float* input, int n, int channels);
+    unsigned int rateDivider;
+    float volume;
+    ofPixels audioPixels;
 	
-	int side;
+    int side;
 	
 	ofShader shader;
 	ofFbo fbo;
-	ofPixels audioPixels;
 	unsigned long time;
-	unsigned int rateDivider;
 	int curCount;
+	string curStartup;
 	
 	bool updateShader, updatePixels;
 	float jpegRating;
@@ -26,4 +29,8 @@ public:
 	
 	unsigned long nextUpdate;
 	string core, source;
+	
+	ofTrueTypeFont font;
+    
+    ofJson config;
 };

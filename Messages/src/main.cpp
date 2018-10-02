@@ -1,8 +1,7 @@
 #include "ofApp.h"
-#include "ofAppGlutWindow.h"
 
 int main() {
-	ofAppGlutWindow window;
-	ofSetupOpenGL(&window, 1024, 1024, OF_WINDOW);
+//    ofSetDataPathRoot(".");
+	ofSetupOpenGL(1280, 720, OF_WINDOW);
 	ofRunApp(new ofApp());
 }
