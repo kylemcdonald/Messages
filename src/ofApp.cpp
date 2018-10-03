@@ -23,9 +23,10 @@ void ofApp::setup() {
     config = ofLoadJson("config.json");
     
     ofHideCursor();
-    ofSetVerticalSync(config["screen"]["vsync"]);
+    ofSetVerticalSync(config["window"]["vsync"]);
     
-    side = 1024;
+    side = config["side"];
+    cout << side << endl;
     ofFbo::Settings fboSettings;
     fboSettings.width = side;
     fboSettings.height = side;
@@ -61,7 +62,19 @@ void ofApp::update() {
     }
     
     if(updateShader) {
-        core = OneLiner::build();
+        scale = 1 << ((int) ofRandom(0,5));
+        xoff = round(ofRandom(0, 1));
+        yoff = round(ofRandom(0, 1));
+        
+        int maxAttempts = 100;
+        for(int i = 0; i < maxAttempts; i++) {
+            core = OneLiner::build();
+            auto result = previous.insert(core);
+            if(result.second) {
+                break;
+            }
+        }
+        
         source = buildShader(core, side);
         shader.unload();
         shader.setupShaderFromSource(GL_FRAGMENT_SHADER, source);
@@ -83,33 +96,57 @@ void ofApp::draw() {
     fbo.end();
     
     ofPushMatrix();
-    for(int y = 0; y < ofGetHeight() + side; y += side) {
-        for(int x = 0; x < ofGetWidth() + side; x += side) {
-            fbo.draw(x, y);
+    ofScale(scale, scale);
+    int offset = (time / rateDivider);
+    offset %= side;
+    ofTranslate(0, -offset);
+    ofEnableBlendMode(OF_BLENDMODE_ADD);
+    vector<ofColor> colors = {ofColor::red, ofColor::green, ofColor::blue};
+    for(int i = 0; i < 3; i++) {
+        ofTranslate(xoff, yoff);
+        ofSetColor(colors[i]);
+        for(int y = 0; y < ofGetHeight() + side; y += side) {
+            for(int x = 0; x < ofGetWidth() + side; x += side) {
+                fbo.draw(x, y);
+            }
         }
     }
+    ofDisableBlendMode();
+        
+    ofPopMatrix();
     
     if(updatePixels) {
         fbo.readToPixels(audioPixels);
         updatePixels = false;
-        
+
         ofImage img = audioPixels;
         img.setImageType(OF_IMAGE_GRAYSCALE);
-        
+
         ofBuffer jpegBuffer;
         ofSaveImage(img.getPixels(), jpegBuffer, OF_IMAGE_FORMAT_JPEG, OF_IMAGE_QUALITY_LOW);
         jpegSize = jpegBuffer.size();
+
+        // safety in case there is a bug
+        if(jpegSize > side*side || jpegSize <= 4) {
+            jpegSize = jpegMax;
+        }
+
         if(jpegSize > jpegMax) {
             jpegMax = jpegSize;
-            img.save(curStartup + ".png");
-            ofBuffer msg(core.c_str(), core.length());
-            ofBufferToFile(curStartup + ".txt", msg);
+
+            if(config["cache"]) {
+                img.save(curStartup + ".png");
+                ofBuffer msg(core.c_str(), core.length());
+                ofBufferToFile(curStartup + ".txt", msg);
+            }
         }
+
         jpegRating = (float) jpegSize / jpegMax;
-        
-        nextUpdate = ofGetSystemTimeMillis() + ((int) (jpegRating * 4) + 1) * 100;
+
+        nextUpdate = ofGetSystemTimeMillis() + ((int) (jpegRating * 4) + 1) * (float) config["duration"];
     }
     
+    ofSetColor(255);
     font.drawString(core, 0, ofGetHeight() - 6);
 }
 

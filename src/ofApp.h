@@ -16,6 +16,8 @@ public:
     ofPixels audioPixels;
 	
     int side;
+    int scale;
+    int xoff, yoff;
 	
 	ofShader shader;
 	ofFbo fbo;
@@ -29,6 +31,7 @@ public:
 	
 	unsigned long nextUpdate;
 	string core, source;
+    std::set<std::string> previous;
 	
 	ofTrueTypeFont font;
     
