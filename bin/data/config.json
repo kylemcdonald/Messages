@@ -3,7 +3,7 @@
 		"width":512,
 		"height":512,
 		"x":0,
-		"y":-1000,
+		"y":0,
 		"vsync": true,
 		"decorated": false,
 		"fullscreen":true
