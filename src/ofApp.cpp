@@ -26,7 +26,6 @@ void ofApp::setup() {
     ofSetVerticalSync(config["window"]["vsync"]);
     
     side = config["side"];
-    cout << side << endl;
     ofFbo::Settings fboSettings;
     fboSettings.width = side;
     fboSettings.height = side;
@@ -46,7 +45,6 @@ void ofApp::setup() {
         soundSettings.sampleRate = config["audio"]["sampleRate"];
         soundSettings.bufferSize = 256;
         soundSettings.numBuffers = 1;
-        rateDivider = config["audio"]["rateDivider"];
         volume = config["audio"]["volume"];
         ofSoundStreamSetup(soundSettings);
     }
@@ -62,6 +60,7 @@ void ofApp::update() {
     }
     
     if(updateShader) {
+        rateDivider = 1 << ((int) ofRandom(0,5));
         scale = 1 << ((int) ofRandom(0,5));
         xoff = round(ofRandom(0, 1));
         yoff = round(ofRandom(0, 1));

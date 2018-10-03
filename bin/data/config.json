@@ -11,7 +11,6 @@
 	"audio": {
 		"enable": true,
 		"sampleRate": 44100,
-		"rateDivider": 8,
 		"volume": 0.1
 	},
 	"duration": 500,
